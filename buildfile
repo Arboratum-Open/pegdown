@@ -1,11 +1,7 @@
 repositories.remote << 'http://repo1.maven.org/maven2'
 repositories.remote << 'http://scala-tools.org/repo-releases'
+repositories.remote << 'http://maven.arboratum.com/libs-releases'
 #repositories.remote << 'http://scala-tools.org/repo-snapshots'
-
-upload_to = 'scala_tools_releases'
-#upload_to = 'scala_tools_snapshots'
-url, user, pass = Buildr.settings.user[upload_to].values_at('url', 'user', 'pass')
-repositories.release_to = { :url => url, :username => user, :password => pass }
 
 VERSION_NUMBER = '1.1.0'
 
