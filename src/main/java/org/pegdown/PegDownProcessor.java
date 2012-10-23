@@ -18,8 +18,12 @@
 
 package org.pegdown;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.parboiled.Parboiled;
 import org.pegdown.ast.RootNode;
+import org.pegdown.verbatim.VerbatimProcessor;
 
 /**
  * A clean and lightweight Markdown-to-HTML filter based on a PEG parser implemented with parboiled.
@@ -31,6 +35,8 @@ import org.pegdown.ast.RootNode;
  */
 public class PegDownProcessor {
     public final Parser parser;
+    protected final Map<String, VerbatimProcessor> verbatimProcessors = new HashMap<String, VerbatimProcessor>();
+
 
     /**
      * Creates a new processor instance without any enabled extensions.
@@ -55,6 +61,20 @@ public class PegDownProcessor {
      */
     public PegDownProcessor(Parser parser) {
         this.parser = parser;
+    }
+
+    /**
+     * Register verbatim processor.
+     *
+     * @param type the type
+     * @param processor the processor
+     */
+    public void registerVerbatimProcessor(String type, VerbatimProcessor processor) {
+        verbatimProcessors.put(type, processor);
+    }
+
+    public Map<String, VerbatimProcessor> getVerbatimProcessors() {
+        return verbatimProcessors;
     }
 
     /**
@@ -97,7 +117,7 @@ public class PegDownProcessor {
      */
     public String markdownToHtml(char[] markdownSource, LinkRenderer linkRenderer) {
         RootNode astRoot = parseMarkdown(markdownSource);
-        return new ToHtmlSerializer(linkRenderer).toHtml(astRoot);
+        return new ToHtmlSerializer(linkRenderer, verbatimProcessors).toHtml(astRoot);
     }
 
     /**

@@ -1,6 +1,7 @@
 repositories.remote << 'http://repo1.maven.org/maven2'
 repositories.remote << 'http://scala-tools.org/repo-releases'
 repositories.remote << 'http://maven.arboratum.com/libs-releases'
+repositories.remote << 'http://oss.sonatype.org/content/repositories/releases'
 #repositories.remote << 'http://scala-tools.org/repo-snapshots'
 
 VERSION_NUMBER = '1.1.0-ARBO'
@@ -10,7 +11,7 @@ define 'pegdown' do
   project.version = VERSION_NUMBER
   project.group = 'org.pegdown'
 
-  manifest['Built-By'] = 'Mathias'
+  manifest['Built-By'] = 'Geoffrey'
   manifest['Specification-Title'] = 'pegdown'
   manifest['Specification-Version'] = VERSION_NUMBER
   manifest['Specification-Vendor'] = 'pegdown.org'
@@ -34,9 +35,16 @@ define 'pegdown' do
           transitive("org.parboiled:parboiled-java:jar:#{PARBOILED_VERSION}"),
           "org.parboiled:parboiled-java:jar:sources:#{PARBOILED_VERSION}"
   ]
+  
+  PLANTUML_VERSION = '7938'
+  PLANTUML = [
+  		transitive("net.sourceforge.plantuml:plantuml:jar:#{PLANTUML_VERSION}"),
+  		"net.sourceforge.plantuml:plantuml:jar:sources:#{PLANTUML_VERSION}"
+  ]
+  
   JTIDY = "net.sf.jtidy:jtidy:jar:r938"
 
-  compile.with PARBOILED
+  compile.with PARBOILED + PLANTUML
   compile.using :deprecation => true, :target => '1.5', :other => ['-encoding', 'UTF-8'], :lint=> 'all'
 
   test.with JTIDY

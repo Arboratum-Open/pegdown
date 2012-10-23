@@ -31,10 +31,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static org.parboiled.support.ParseTreeUtils.printNodeTree;
 import static org.parboiled.trees.GraphUtils.printTree;
 import static org.pegdown.TestUtils.assertEqualsMultiline;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public abstract class AbstractTest {
@@ -47,6 +45,7 @@ public abstract class AbstractTest {
         tidy.setPrintBodyOnly(true);
         tidy.setShowWarnings(false);
         tidy.setQuiet(true);
+
     }
 
     protected abstract PegDownProcessor getProcessor();
@@ -60,9 +59,9 @@ public abstract class AbstractTest {
     protected void test(String testName, String expectedOutput) {
         char[] markdown = FileUtils.readAllCharsFromResource(testName + ".md");
         Preconditions.checkState(markdown != null, "Test not found");
-        
+
         RootNode astRoot = getProcessor().parseMarkdown(markdown);
-        String actualHtml = new ToHtmlSerializer(new LinkRenderer()).toHtml(astRoot);
+        String actualHtml = new ToHtmlSerializer(new LinkRenderer(), getProcessor().getVerbatimProcessors()).toHtml(astRoot);
 
         // debugging I: check the parse tree
         //assertEquals(printNodeTree(getProcessor().parser.parseToParsingResult(markdown)), "<parse tree>");

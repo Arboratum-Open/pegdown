@@ -416,7 +416,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
                 )
         );
     }
-    
+
     public Rule Enumerator() {
         return Sequence(NonindentSpace(), OneOrMore(Digit()), '.', OneOrMore(Spacechar()));
     }
@@ -424,7 +424,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
     public Rule Bullet() {
         return Sequence(TestNot(HorizontalRule()), NonindentSpace(), AnyOf("+*-"), OneOrMore(Spacechar()));
     }
-    
+
     //************* LIST ITEM ACTIONS ****************
 
     boolean appendCrossed(StringBuilderVar block) {
@@ -441,7 +441,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
         block.clearContents();
         return withIndicesShifted(innerRoot, (Integer) context.getValueStack().pop());
     }
-    
+
     Node withIndicesShifted(Node node, int delta) {
         ((AbstractNode) node).shiftIndices(delta);
         for (Node subNode : node.getChildren()) {
@@ -466,7 +466,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
         item.getChildren().set(0, paraNode);
         return true;
     }
-    
+
     boolean setListItemIndices() {
         SuperNode listItem = (SuperNode) getContext().getValueStack().peek();
         List<Node> children = listItem.getChildren();
@@ -622,7 +622,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
     public Rule CharLine(char c) {
         return FirstOf(NOrMore(c, 4), Sequence(Spacechar(), OneOrMore(c), Test(Spacechar())));
     }
-    
+
     public Rule StrongOrEmph() {
         return Sequence(
                 Test(AnyOf("*_")),
@@ -819,7 +819,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
                 ']'
         );
     }
-    
+
     public Rule Reference() {
         Var<ReferenceNode> ref = new Var<ReferenceNode>();
         return NodeSequence(
@@ -1024,7 +1024,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
     public Rule NotNewline() {
         return TestNot(AnyOf("\n\r"));
     }
-    
+
     public Rule Newline() {
         return FirstOf('\n', Sequence('\r', Optional('\n')));
     }
@@ -1227,11 +1227,11 @@ public class Parser extends BaseParser<Object> implements Extensions {
     }
 
     //************* HELPERS ****************
-    
+
     public Rule NOrMore(char c, int n) {
         return Sequence(repeat(c, n), ZeroOrMore(c));
     }
-    
+
     public Rule NodeSequence(Object... nodeRules) {
         return Sequence(
                 push(getContext().getCurrentIndex()),
@@ -1239,14 +1239,14 @@ public class Parser extends BaseParser<Object> implements Extensions {
                 setIndices()
         );
     }
-    
+
     public boolean setIndices() {
         AbstractNode node = (AbstractNode) peek();
         node.setStartIndex((Integer)pop(1));
         node.setEndIndex(currentIndex());
         return true;
     }
-    
+
     public boolean addAsChild() {
         SuperNode parent = (SuperNode) peek(1);
         List<Node> children = parent.getChildren();
@@ -1265,7 +1265,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
         children.add(child);
         return true;
     }
-    
+
     public Node popAsNode() {
         return (Node) pop();
     }
@@ -1277,12 +1277,12 @@ public class Parser extends BaseParser<Object> implements Extensions {
     public boolean ext(int extension) {
         return (options & extension) > 0;
     }
-    
+
     // called for inner parses for list items and blockquotes
     public RootNode parseInternal(StringBuilderVar block) {
         char[] chars = block.getChars();
         int[] ixMap = new int[chars.length + 1]; // map of cleaned indices to original indices
-        
+
         // strip out CROSSED_OUT characters and build index map
         StringBuilder clean = new StringBuilder();
         for (int i = 0; i < chars.length; i++) {
@@ -1293,15 +1293,15 @@ public class Parser extends BaseParser<Object> implements Extensions {
             }
         }
         ixMap[clean.length()] = chars.length;
-        
+
         // run inner parse
         char[] cleaned = new char[clean.length()];
         clean.getChars(0, cleaned.length, cleaned, 0);
         RootNode rootNode = parseInternal(cleaned);
-        
+
         // correct AST indices with index map
         fixIndices(rootNode, ixMap);
-        
+
         return rootNode;
     }
 
@@ -1323,7 +1323,7 @@ public class Parser extends BaseParser<Object> implements Extensions {
         }
         return (RootNode) result.resultValue;
     }
-    
+
     ParsingResult<Node> parseToParsingResult(char[] source) {
         return parseRunnerProvider.get(Root()).run(source);
     }
