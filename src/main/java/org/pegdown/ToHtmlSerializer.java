@@ -229,6 +229,12 @@ public class ToHtmlSerializer implements Visitor {
         printIndentedTag(node, "tbody");
     }
 
+    @Override
+    public void visit(TableCaptionNode node) {
+        printer.println().print("<caption>");
+        visitChildren(node);
+        printer.print("</caption>");
+    }
     public void visit(TableCellNode node) {
         String tag = inTableHeader ? "th" : "td";
         TableColumnNode column = currentTableNode.getColumns().get(currentTableColumn);

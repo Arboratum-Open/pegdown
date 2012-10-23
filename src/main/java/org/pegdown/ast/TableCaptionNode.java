@@ -16,17 +16,12 @@
  * limitations under the License.
  */
 
-package org.pegdown;
+package org.pegdown.ast;
 
-import org.testng.Assert;
+public class TableCaptionNode extends SuperNode {
 
-public class TestUtils {
-
-    public static void assertEqualsMultiline(String actual, String expected) {
-        Assert.assertEquals(
-                actual.replaceAll("\\s+", " ").replaceAll("\\s*(\r\n|\n|\r)", "").replaceAll(">\\s+<", "><"),
-                expected.replaceAll("\\s+", " ").replaceAll("\\s*(\r\n|\n|\r)", "").replaceAll(">\\s+<", "><")
-        );
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
-
 }

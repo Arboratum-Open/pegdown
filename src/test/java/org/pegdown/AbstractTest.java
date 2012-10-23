@@ -74,20 +74,21 @@ public abstract class AbstractTest {
         //assertEquals(actualHtml, "");
 
         // tidy up html for fair equality test
-        actualHtml = tidy(actualHtml);
+        actualHtml = tidy(actualHtml.replaceAll("\\s*(\r\n|\n|\r)", "\n").trim());
+        expectedOutput = tidy(expectedOutput.replaceAll("\\s*(\r\n|\n|\r)", "\n").trim());
         assertEqualsMultiline(actualHtml, expectedOutput);
     }
-    
+
     @SuppressWarnings( {"ConstantConditions"})
-    protected void testAST(String testName) {        
+    protected void testAST(String testName) {
         String markdown = FileUtils.readAllTextFromResource(testName + ".md").replace("\r\n", "\n");
         Preconditions.checkState(markdown != null, "Test not found");
-        
+
         String expectedAst = FileUtils.readAllTextFromResource(testName + ".ast");
         assertNotNull(expectedAst);
-        
+
         RootNode astRoot = getProcessor().parseMarkdown(markdown.toCharArray());
-        
+
         // check parse tree
         //assertEquals(printNodeTree(getProcessor().parser.parseToParsingResult(markdown)), "<parse tree>");
 
