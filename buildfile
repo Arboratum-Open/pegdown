@@ -4,7 +4,7 @@ repositories.remote << 'http://maven.arboratum.com/libs-releases'
 repositories.remote << 'http://oss.sonatype.org/content/repositories/releases'
 #repositories.remote << 'http://scala-tools.org/repo-snapshots'
 
-VERSION_NUMBER = '1.1.0-ARBO'
+VERSION_NUMBER = '1.1.0-ARBO-SNAPSHOT'
 
 desc 'The pegdown project'
 define 'pegdown' do

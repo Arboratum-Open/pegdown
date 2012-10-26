@@ -37,6 +37,7 @@ public class PhpMarkdownExtraTest extends AbstractTest {
         test("PhpMarkdownExtra/Definition_Lists");
         test("PhpMarkdownExtra/Fenced_Code_Blocks");
         test("PhpMarkdownExtra/Tables");
+        test("PhpMarkdownExtra/Block_HTML_with_Markdown_content");
     }
 
 }

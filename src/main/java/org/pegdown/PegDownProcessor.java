@@ -117,7 +117,7 @@ public class PegDownProcessor {
      */
     public String markdownToHtml(char[] markdownSource, LinkRenderer linkRenderer) {
         RootNode astRoot = parseMarkdown(markdownSource);
-        return new ToHtmlSerializer(linkRenderer, verbatimProcessors).toHtml(astRoot);
+        return new ToHtmlSerializer(linkRenderer, verbatimProcessors, this).toHtml(astRoot);
     }
 
     /**

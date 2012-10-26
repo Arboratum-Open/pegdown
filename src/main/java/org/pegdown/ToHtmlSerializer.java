@@ -41,14 +41,17 @@ public class ToHtmlSerializer implements Visitor {
     protected TableNode currentTableNode;
     protected int currentTableColumn;
     protected boolean inTableHeader;
+    protected PegDownProcessor pegDownProcessor;
 
     public ToHtmlSerializer(LinkRenderer linkRenderer) {
         this.linkRenderer = linkRenderer;
         verbatimProcessors = Collections.emptyMap();
+        pegDownProcessor = new PegDownProcessor();
     }
-    public ToHtmlSerializer(LinkRenderer linkRenderer, Map<String, VerbatimProcessor> verbatimProcessors) {
+    public ToHtmlSerializer(LinkRenderer linkRenderer, Map<String, VerbatimProcessor> verbatimProcessors, PegDownProcessor pegDownProcessor) {
         this.linkRenderer = linkRenderer;
         this.verbatimProcessors = verbatimProcessors;
+        this.pegDownProcessor =  pegDownProcessor;
     }
 
 
@@ -141,6 +144,16 @@ public class ToHtmlSerializer implements Visitor {
     public void visit(HtmlBlockNode node) {
         String text = node.getText();
         if (text.length() > 0) printer.println();
+        if (text.startsWith("<div markdown")) {
+            int endDiv = text.indexOf('>');
+            String tag = StringUtils.substring(text, 0, endDiv+1);
+            int closeTag = text.lastIndexOf("</div>");
+            String toparse = StringUtils.substring(text, endDiv+1, closeTag);
+
+            pegDownProcessor.verbatimProcessors.putAll(verbatimProcessors);
+            text = tag + pegDownProcessor.markdownToHtml(toparse, linkRenderer) + "</div>";
+        }
+
         printer.print(text);
     }
 
